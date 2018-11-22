@@ -35,7 +35,6 @@
                   total += omzet_data[i];
               }
               var omzet_avg = total / omzet_data.length;
-              console.log(omzet_avg);
 
               // tranform to coordinate on the screen
               function createTransform(domain, range){
@@ -81,8 +80,6 @@
                 // mark points on xaxis
                 var quart_len = 600 / period_len;
                 var year_len = 4 * quart_len;
-                console.log(year_len)
-                console.log(period_len)
                 ctx.fillStyle = 'rgb(0,0,0)';
                 ctx.fillRect(99, 700, 2, 4);
                 for (i = 0; i < 14; i = i + 1){
@@ -98,7 +95,6 @@
 
                 // mark points on y xaxis
                 var step = 600 / 13.1;
-                console.log(step);
                 for (i = 0; i < 13; i = i + 1){
                   ctx.fillStyle = 'rgb(0,0,0)'
                   var yposition = 700 - i * step;
@@ -134,10 +130,8 @@
                 ctx.fillText("Sales", 30, 375);
                 ctx.fillText("Value", 30, 400);
                 ctx.fillText("(2015 = 100)", 10, 420);
-
               }
         }
-
         txtFile.open("GET", fileName);
         txtFile.send();
       </script>
