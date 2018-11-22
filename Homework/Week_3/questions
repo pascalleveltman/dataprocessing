@@ -1,0 +1,10 @@
+Questions
+Answer the following questions in your own words. This assignment will only be graded pass or fail.
+
+Explain the difference between the == operator and the === operator.
+=== tests if the value
+
+Explain what a closure is. (Note that JavaScript programs use closures very often)
+Explain what higher order functions are.
+Explain what a query selector is and give an example line of JavaScript that uses a query selector.
+In the folder Homework in your Data Processing repository on GitHub create a folder Week_3 and push a PDF file with the answers there.

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Catering Industry Sales</title>
+  </head>
+  <body>
+      <canvas id="myCanvas" width="1000" height="1000"></canvas>
+      <script>
+        var fileName = "horeca_json.json";
+        var txtFile = new XMLHttpRequest();
+        txtFile.onreadystatechange = function() {
+          if (txtFile.readyState === 4 && txtFile.status == 200) {
+              console.log(JSON.parse(txtFile.responseText));
+
+              // set background colour
+              document.body.style.backgroundColor = 'rgb(255,218,185)'
+
+              // parse and define data and its keys (periods)
+              data = JSON.parse(txtFile.responseText);
+              keys = Object.keys(data);
+
+              // create empty list for values that will be visualized
+              var periods = [];
+              var omzet_data = [];
+
+              // save values of that key from each period
+              keys.forEach(function(key){
+                periods.push(key);
+                omzet_data.push(parseFloat(data[key]["Indexcijfers omzet/Waarde (2015=100)"]))
+              })
+
+              // calculate average omzet
+              var total = 0;
+              for(var i = 0; i < omzet_data.length; i++) {
+                  total += omzet_data[i];
+              }
+              var omzet_avg = total / omzet_data.length;
+              console.log(omzet_avg);
+
+              // tranform to coordinate on the screen
+              function createTransform(domain, range){
+                    var domain_min = domain[0];
+                    var domain_max = domain[1];
+                    var range_min = range[0];
+                    var range_max = range[1];
+
+                    // formulas to calculate the alpha and the beta
+                   	var alpha = (range_max - range_min) / (domain_max - domain_min);
+                    var beta = range_max - alpha * domain_max;
+
+                    // returns the function for the linear transformation (y= a * x + b)
+                    return function(x){
+                      return alpha * x + beta;
+                    }
+                }
+
+                // define period domain in time
+                var period_len = periods.length;
+                var period_min = new Date(periods[0]);
+                period_min = period_min.getTime();
+                var period_max = new Date(periods[(period_len - 1)]);
+                period_max = period_max.getTime();
+
+                // call functions for x and y scale
+                var omzet_max = Math.max(...omzet_data);
+                transform_x = createTransform([period_min, period_max], [100, 700]);
+                transform_y = createTransform([0,omzet_max], [700, 100]);
+
+                // start canvas
+                var c = document.getElementById("myCanvas");
+                var ctx = c.getContext("2d");
+
+                // draw x and y axis
+                ctx.beginPath();
+                ctx.lineWidth=7;
+                ctx.moveTo(100,700);
+                ctx.lineTo(700,700);
+                ctx.moveTo(100,100);
+                ctx.lineTo(100,700);
+
+                // mark points on xaxis
+                var quart_len = 600 / period_len;
+                var year_len = 4 * quart_len;
+                console.log(year_len)
+                console.log(period_len)
+                ctx.fillStyle = 'rgb(0,0,0)';
+                ctx.fillRect(99, 700, 2, 4);
+                for (i = 0; i < 14; i = i + 1){
+                  // create point
+                  ctx.fillStyle = 'rgb(0,0,0)'
+                  var xposition = 100 + i * year_len;
+                  ctx.fillRect(xposition, 700, 2, 4);
+                  // tell what year it is
+                  var year = 2005 + i
+                  ctx.font="12px Georgia";
+                  ctx.fillText(year,xposition,720);
+                }
+
+                // mark points on y xaxis
+                var step = 600 / 13.1;
+                console.log(step);
+                for (i = 0; i < 13; i = i + 1){
+                  ctx.fillStyle = 'rgb(0,0,0)'
+                  var yposition = 700 - i * step;
+                  ctx.fillRect(95, yposition, 4, 2);
+                  var value = i * 10
+                  ctx.font="12px Georgia";
+                  ctx.fillText(value, 80, yposition);
+                }
+
+                // start drawing line chart
+                ctx.moveTo(periods[0],omzet_data[0]);
+
+                ctx.lineWidth=2;
+                // find coordinatses by function
+                for (i = 0; i < periods.length; i++) {
+                    // for x values, change date to time
+                    var period = new Date(periods[i]);
+                    period = period.getTime();
+                    var x_c = transform_x(period);
+
+                    // for y values, just transform
+                    var y_c = transform_y(omzet_data[i]);
+                    ctx.lineTo(x_c,y_c);
+                }
+                ctx.stroke();
+
+                // create titles
+                ctx.font="25px Georgia";
+                ctx.fillText("Sales Performence of the Dutch Catering Industry over Time", 10, 40);
+                ctx.font="15px Georgia";
+                ctx.fillText("Year (datapoint per quarter)", 330, 750);
+                ctx.fillText("Indice", 25, 350);
+                ctx.fillText("Sales", 30, 375);
+                ctx.fillText("Value", 30, 400);
+                ctx.fillText("(2015 = 100)", 10, 420);
+
+              }
+        }
+
+        txtFile.open("GET", fileName);
+        txtFile.send();
+      </script>
+  </body>
+</html>
