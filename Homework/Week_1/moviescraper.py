@@ -8,14 +8,13 @@ This script scrapes IMDB and outputs a CSV file with highest rated movies.
 import csv
 from requests import get
 from requests.exceptions import RequestException
-from urllib.request import urlopen as uReq
 from contextlib import closing
 from bs4 import BeautifulSoup
 
-# define webpage
 TARGET_URL = "https://www.imdb.com/search/title?title_type=feature&release_date=2008-01-01,2018-01-01&num_votes=5000,&sort=user_rating,desc"
 BACKUP_HTML = 'movies.html'
 OUTPUT_CSV = 'movies.csv'
+
 
 def extract_movies(dom):
     """
@@ -33,33 +32,33 @@ def extract_movies(dom):
     # NOTE: FOR THIS EXERCISE YOU ARE ALLOWED (BUT NOT REQUIRED) TO IGNORE
     # UNICODE CHARACTERS AND SIMPLY LEAVE THEM OUT OF THE OUTPUT.
 
-    # make list to add lines of movies to
+    # create a general list to add the movies to
     movies = []
-    # grabs each item
+
+    # grabs each item in the ranking list
     containers = dom.findAll("div", {"class":"lister-item mode-advanced"})
 
-    # from each item grab find the information
+    # iterate through the ranking list to save contents
     for container in containers:
         # select div with content
         content = container.find("div", {"class":"lister-item-content"})
 
-        # from header in content select title
+        # from the header in content select the title
         Title = content.h3.a.text
         # check if there is a komma in title
         if "," in Title:
             Title = Title.replace(",", ";")
-            print(type(Title))
 
-        # select rating from ratingsbar
+        # select the rating of the movie from the rating bar
         Rating = content.div.div["data-value"]
         Rating = float(Rating)
 
-        # select year from header find span class
-        header2 = content.h3.find("span", {"class":"lister-item-year text-muted unbold"})
-        Year = header2.text
+        # select the year of release from the header
+        headeryear = content.h3.find("span", {"class":"lister-item-year text-muted unbold"})
+        Year = headeryear.text
         # remove brackets
-        Year = Year.replace("(", "")
-        Year = Year.replace(")", "")
+        Year = Year.replace("(","")
+        Year = Year.replace(")","")
         # check if year is also I or II
         if 'II' in Year:
             Year = Year.replace("II ", "")
@@ -69,8 +68,9 @@ def extract_movies(dom):
             Title = Title + " I"
         Year = int(Year)
 
-        # select actors
+        # create a list for the Actors
         Actors = []
+        # select actors from content and add to list
         stars = content.findAll('a')
         for star in stars:
             if "_li_st_" in star["href"]:
@@ -78,33 +78,31 @@ def extract_movies(dom):
                 Actors.append(name)
         # replace list by string
         Actors = ', '.join(Actors)
-        print(type(Actors))
 
-        # define the runtime of the movie
+        # select runtime
         Runtime = content.p.find("span", {"class":"runtime"}).text
-        Runtime = Runtime.replace(" min","")
+        # only a Number
+        Runtime = Runtime.replace(" min", "")
 
         # save as list in line and add line to movies
         line = [Title, Rating, Year, Actors, Runtime]
         movies.append(line)
 
     # return list of movies
-    return(movies)
+    return (movies)
+
 
 def save_csv(outfile, movies):
     """
     Output a CSV file containing highest rated movies.
     """
-    print(movies)
     writer = csv.writer(outfile)
     writer.writerow(['Title', 'Rating', 'Year', 'Actors', 'Runtime'])
+
     for line in movies:
-        print(line)
         writer.writerow(line)
 
     return(writer)
-
-    # ADD SOME CODE OF YOURSELF HERE TO WRITE THE MOVIES TO DISK
 
 
 def simple_get(url):
