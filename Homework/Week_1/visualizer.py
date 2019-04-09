@@ -10,13 +10,12 @@ import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 
-
-# Global constants for the input file, first and last year
+# global constants for the input file, first and last year
 INPUT_CSV = "movies.csv"
 START_YEAR = 2008
 END_YEAR = 2018
 
-# Global dictionary for the data per year
+# global dictionary for the data per year
 data_dict = {str(key): [] for key in range(START_YEAR, END_YEAR)}
 
 # open the csv file with the information

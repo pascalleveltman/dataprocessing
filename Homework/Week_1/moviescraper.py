@@ -44,48 +44,49 @@ def extract_movies(dom):
         content = container.find("div", {"class":"lister-item-content"})
 
         # from the header in content select the title
-        Title = content.h3.a.text
+        title = content.h3.a.text
+
         # check if there is a komma in title
-        if "," in Title:
-            Title = Title.replace(",", ";")
+        if "," in title:
+            title = title.replace(",", ";")
 
         # select the rating of the movie from the rating bar
-        Rating = content.div.div["data-value"]
-        Rating = float(Rating)
+        rating = content.div.div["data-value"]
+        rating = float(rating)
 
         # select the year of release from the header
         headeryear = content.h3.find("span", {"class":"lister-item-year text-muted unbold"})
-        Year = headeryear.text
-        # remove brackets
-        Year = Year.replace("(","")
-        Year = Year.replace(")","")
-        # check if year is also I or II
-        if 'II' in Year:
-            Year = Year.replace("II ", "")
-            Title = Title + " II"
-        if 'I' in Year:
-            Year = Year.replace("I ", "")
-            Title = Title + " I"
-        Year = int(Year)
+        year = headeryear.text
 
-        # create a list for the Actors
-        Actors = []
+        # remove brackets and check if year is also I or II
+        year = year.replace("(","")
+        year = year.replace(")","")
+        if 'II' in year:
+            year = year.replace("II ", "")
+            title = title + " II"
+        if 'I' in year:
+            year = year.replace("I ", "")
+            title = title + " I"
+        year = int(year)
+
+        # create a list for the actors
+        actors = []
+
         # select actors from content and add to list
         stars = content.findAll('a')
         for star in stars:
             if "_li_st_" in star["href"]:
                 name =  star.text
-                Actors.append(name)
+                actors.append(name)
         # replace list by string
-        Actors = ', '.join(Actors)
+        actors = ', '.join(actors)
 
-        # select runtime
-        Runtime = content.p.find("span", {"class":"runtime"}).text
-        # only a Number
-        Runtime = Runtime.replace(" min", "")
+        # select runtime and make sure it is just a number
+        runtime = content.p.find("span", {"class":"runtime"}).text
+        runtime = runtime.replace(" min", "")
 
         # save as list in line and add line to movies
-        line = [Title, Rating, Year, Actors, Runtime]
+        line = [title, rating, year, actors, runtime]
         movies.append(line)
 
     # return list of movies
