@@ -2,14 +2,16 @@ Questions
 Answer the following questions in your own words. This assignment will only be graded pass or fail.
 
 Explain the difference between the == operator and the === operator.
-"==" only checks if the two values are the same, e.g. you can compare a integer to a string. "===" not only checks the value, it also checks if the types are the same.
+== tests if the values of the left and right side are equal. === tests if the characters are exactly the same on the left and right side. Both return true or false.
 
 Explain what a closure is. (Note that JavaScript programs use closures very often)
-A closure is a feature in JavaScript where an inner function has access to the outer (enclosing) function's variables — a scope chain. It is a function surrounded by other functions which it refers to.
+it is a function surrounded by other functions which it refers to.
 
 Explain what higher order functions are.
-A higher order function is a function that takes more functions as arguments and returns a function.
+a higher order function is a function that takes more functions as arguments and returns a function.
 
 Explain what a query selector is and give an example line of JavaScript that uses a query selector.
 It gives the first element that equals the given selector, or a group of selectors or null when it did not find any.
 var el = document.querySelector(".mijnklasse");
+
+In the folder Homework in your Data Processing repository on GitHub create a folder Week_3 and push a PDF file with the answers there.

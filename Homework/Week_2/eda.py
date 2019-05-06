@@ -22,12 +22,9 @@ output_json = "output.json"
 
 def main(input):
 
-    df = pd.read_csv(input)
-
     # Open the file and scan input
     with open(input) as input_file:
         countries_reader = csv.DictReader(input_file)
-
 
         # make list with the information per Country
         dataframe_all = []

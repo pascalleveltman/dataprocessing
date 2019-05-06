@@ -13,7 +13,7 @@
               console.log(JSON.parse(txtFile.responseText));
 
               // set background colour
-              document.body.style.backgroundColor = 'rgb(153, 204, 255)'
+              document.body.style.backgroundColor = 'rgb(255,218,185)'
 
               // parse and define data and its keys (periods)
               data = JSON.parse(txtFile.responseText);
@@ -47,7 +47,7 @@
                    	var alpha = (range_max - range_min) / (domain_max - domain_min);
                     var beta = range_max - alpha * domain_max;
 
-                    // returns the function for the linear transformation (y = a * x + b)
+                    // returns the function for the linear transformation (y= a * x + b)
                     return function(x){
                       return alpha * x + beta;
                     }
@@ -69,18 +69,15 @@
                 var c = document.getElementById("myCanvas");
                 var ctx = c.getContext("2d");
 
-                // draw x and y axis and fill figure with different colour
+                // draw x and y axis
                 ctx.beginPath();
-                ctx.lineWidth=5;
+                ctx.lineWidth=7;
                 ctx.moveTo(100,700);
                 ctx.lineTo(700,700);
                 ctx.moveTo(100,100);
                 ctx.lineTo(100,700);
-                ctx.stroke()
-                ctx.fillStyle = 'rgb(255, 255, 255)';
-                ctx.fillRect(100, 100, 600, 600);
 
-                // mark points on x-axis
+                // mark points on xaxis
                 var quart_len = 600 / period_len;
                 var year_len = 4 * quart_len;
                 ctx.fillStyle = 'rgb(0,0,0)';
@@ -93,58 +90,46 @@
                   // tell what year it is
                   var year = 2005 + i
                   ctx.font="12px Georgia";
-                  ctx.fillText(year,(xposition - 10),720);
+                  ctx.fillText(year,xposition,720);
                 }
 
-                // mark points on y-axis and draw thin lines to read values
+                // mark points on y xaxis
                 var step = 600 / 13.1;
                 for (i = 0; i < 13; i = i + 1){
                   ctx.fillStyle = 'rgb(0,0,0)'
                   var yposition = 700 - i * step;
                   ctx.fillRect(95, yposition, 4, 2);
-                  ctx.beginPath();
-                  ctx.lineWidth=0.5;
-                  if (i == 10){
-                    ctx.strokeStyle = "rgb(255,0,0)";
-                  }
-                  else{
-                    ctx.strokeStyle = "rgb(128,128,128)";
-                  }
-                  ctx.moveTo(100, yposition);
-                  ctx.lineTo(700, yposition);
-                  ctx.stroke();
                   var value = i * 10
                   ctx.font="12px Georgia";
-                  ctx.fillText(value, 73, (yposition + 5));
+                  ctx.fillText(value, 80, yposition);
                 }
 
                 // start drawing line chart
-                ctx.beginPath();
                 ctx.moveTo(periods[0],omzet_data[0]);
-                ctx.lineWidth=2;
-                ctx.strokeStyle = "rgb(0,0,0)";
 
-                // find coordinatses by function and draw a line through it
+                ctx.lineWidth=2;
+                // find coordinatses by function
                 for (i = 0; i < periods.length; i++) {
+                    // for x values, change date to time
                     var period = new Date(periods[i]);
                     period = period.getTime();
                     var x_c = transform_x(period);
 
+                    // for y values, just transform
                     var y_c = transform_y(omzet_data[i]);
                     ctx.lineTo(x_c,y_c);
                 }
                 ctx.stroke();
 
-                // create titles for axis and figure
-                ctx.font="bold 25px Georgia";
-                ctx.fillText("Sales Performence of the Dutch Catering Industry over Time", 30, 70);
-                ctx.font="bold 15px Georgia";
-                ctx.fillText("Year (datapoint per quarter)", 300, 750);
-                ctx.fillText("Indice", 20, 350);
-                ctx.fillText("Sales", 23, 374);
-                ctx.fillText("Value", 22, 399);
-                ctx.font="bold 13px Georgia";
-                ctx.fillText("(2015 = 100)", 4, 417);
+                // create titles
+                ctx.font="25px Georgia";
+                ctx.fillText("Sales Performence of the Dutch Catering Industry over Time", 10, 40);
+                ctx.font="15px Georgia";
+                ctx.fillText("Year (datapoint per quarter)", 330, 750);
+                ctx.fillText("Indice", 25, 350);
+                ctx.fillText("Sales", 30, 375);
+                ctx.fillText("Value", 30, 400);
+                ctx.fillText("(2015 = 100)", 10, 420);
               }
         }
         txtFile.open("GET", fileName);
