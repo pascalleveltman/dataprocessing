@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head lang="en">
+    <meta charset="utf-8">
+        <title>D3 Bar Chart</title>
+        <script type="text/javascript" src="d3/d3.js"></script>
+  </head>
+  <body>
+    <h1>Aantal homo huwelijken in 2017</h1>
+    <script type="text/javascript">
+
+            // add name and explanatory in paragraph
+            d3.select("body").append("p").text("Pascalle Veltman, 11025646");
+            d3.select("body").append("p").text("Het aantal huwelijken tussen mannen en tussen vrouwen in het jaar 2017 weergegeven in een staaf diagram.");
+
+            // set svg width and length and margins
+            var margin = {top: 70, right: 50, bottom: 30, left: 70};
+            var svg_width = 600 - margin.left - margin.right ;
+            var svg_height = 600 - margin.top - margin.bottom;
+
+            // draw svg
+            var svg = d3.select("body")
+                        .append("svg")
+                        .attr("width", svg_width + margin.left + margin.right)
+                        .attr("height", svg_height + margin.top + margin.bottom)
+                        .append("g")
+                        .attr("transform",
+                        "translate(" + margin.left + "," + margin.top + ")");
+
+            // read json file as data
+            d3.json("Huwelijken_json.json").then(function(data) {
+
+                console.log(data);
+
+                // create a y scale function for y axis values
+                var y_scale = d3.scaleLinear()
+                     .domain([0, d3.max(data, function(d) {
+                        return d["Waarde"];
+                     })])
+                     .range([0, svg_height]);
+
+                var y_scaleaxis = d3.scaleLinear()
+                    .domain([0, d3.max(data, function(d) {
+                       return d["Waarde"];
+                    })])
+                    .range([svg_height, 0]);
+
+                // create x scale function where nothing changes
+                var x_scale = d3.scaleBand()
+                    .domain(data.map(function(d) {
+                      return d["Soort"];
+                    }))
+                    .range([0, svg_width]);
+
+                // create bars from data
+                svg.selectAll("rect")
+                        .data(data)
+                        .enter()
+                        .append("rect")
+                        .attr("x", function(d, i) {
+                              return x_scale(d["Soort"]) + 80
+                        })
+                        .attr("y", function(d) {
+                            return svg_height - y_scale(d["Waarde"]);
+                        })
+                        .attr("width", 80)
+                        .style("height", function(d) {
+                            console.log(d);
+                            return y_scale(d["Waarde"]) + "px";
+                        })
+                        .attr("fill", function(d, i) {
+                            if (i == 0){return "blue"}
+                            else {return "pink"};
+                        });
+
+                // draw y axis
+                svg.append("g")
+                    .call(d3.axisLeft(y_scaleaxis));
+
+                // draw x axis
+                svg.append("g")
+                    .attr("class", "axis")
+                    .attr("transform", "translate(0," + svg_height + ")")
+                    .call(d3.axisBottom(x_scale));
+            });
+    </script>
+  </body>
+</html>
