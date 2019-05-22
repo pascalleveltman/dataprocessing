@@ -1,0 +1,32 @@
+body {
+  background-color: white;
+}
+
+.header {
+  color: black;
+  font-family: Arial;
+}
+
+.axis {
+  font-size: 12px;
+  color: black;
+  font-family: Arial;
+}
+
+.grid {
+  color: lightgrey;
+}
+
+.arc text {
+            font: 10px sans-serif;
+            text-anchor: middle;
+        }
+
+.arc path {
+            stroke: #fff;
+        }
+
+.title {
+            fill: teal;
+            font-weight: bold;
+        }
