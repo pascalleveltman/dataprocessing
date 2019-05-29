@@ -13,18 +13,44 @@ body {
   font-family: Arial;
 }
 
+.title_axis {
+  font-size: 16px;
+  color: black;
+  font-family: Arial;
+}
+
+.pie_year {
+  font-size: 18px;
+  color: black;
+  font-family: Arial;
+}
+
+.mouse {
+  font-size: 12px;
+  color: black;
+  font-family: Arial;
+  font-weight: bold;
+}
+
 .grid {
   color: lightgrey;
 }
 
-.arc text {
-            font: 10px sans-serif;
-            text-anchor: middle;
-        }
+.tooltip {
+        background: #eee;
+        box-shadow: 0 0 5px #999999;
+        color: #333;
+        display: none;
+        font-size: 12px;
+        left: 130px;
+        padding: 10px;
+        position: absolute;
+        text-align: center;
+        top: 95px;
+        width: 80px;
+        z-index: 10;
+      }
 
-.arc path {
-            stroke: #fff;
-        }
 
 .title {
             fill: teal;
